@@ -1,3 +1,12 @@
+using OpenTelemetry.Resources; //for defining service name, environment, and version
+using OpenTelemetry.Trace; //for enabling tracing
+using OpenTelemetry.Metrics; //for enabling metrics
+using OpenTelemetry.Logs; //for enabling logging
+using Grafana.OpenTelemetry; //for intergrating directly with Grafana cloud
+
+
+
+
 
 namespace Grafana.DashboardSetupDemo
 {
