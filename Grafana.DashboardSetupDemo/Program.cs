@@ -16,6 +16,17 @@ namespace Grafana.DashboardSetupDemo
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
+            //Read OpenTelemetry settings from appsettings.json
+            var config = builder.Configuration;
+
+            var serviceName = config["OpenTelemetry:ServiceName"]; //	The name of your app (shown in Grafana)
+            var oltpEndpoint = config["OpenTelemetry:OtlpEndpoint"]; //The URL Grafana gives you to receive telemetry
+            var protocol = config["OpenTelemetry:Protocol"]; //	Protocol for sending data (usually http/protobuf)
+            var apiToken = config["OpenTelemetry:ApiToken"]; //	Your secret key to authenticate to Grafana
+            var instanceId = config["OpenTelemetry:InstanceId"]; //	Your unique Grafana Cloud instance ID
+            var attributes = config["OpenTelemetry:Attributes"]; //	Any additional attributes you want to add to your telemetry,Extra info like deployment.environment=production
+
             // Add services to the container.
             builder.Services.AddAuthorization();
 
