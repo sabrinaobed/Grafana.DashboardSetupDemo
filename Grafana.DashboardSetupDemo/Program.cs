@@ -91,6 +91,9 @@ namespace Grafana.DashboardSetupDemo
 
             app.UseHttpsRedirection();
 
+            //Enable the metrics endpoint for Prometheus scraping
+            app.UseOpenTelemetryPrometheusScrapingEndpoint();
+
             app.UseAuthorization();
 
             var summaries = new[]
