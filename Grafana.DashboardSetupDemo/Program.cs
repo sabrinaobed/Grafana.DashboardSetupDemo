@@ -27,6 +27,13 @@ namespace Grafana.DashboardSetupDemo
             var instanceId = config["OpenTelemetry:InstanceId"]; //	Your unique Grafana Cloud instance ID
             var attributes = config["OpenTelemetry:Attributes"]; //	Any additional attributes you want to add to your telemetry,Extra info like deployment.environment=production
 
+            //Set required envirnoment variables for OpenTelemetry and Grafana
+            Environment.SetEnvironmentVariable("OTEL_RESOURCE_ATTRIBUTES", attributes); //Set service metadata like envirnoment = production
+            Environment.SetEnvironmentVariable("OTEL_SERVICE_NAME", serviceName); //Set the name of your app which which will appear in Grafana
+            Environment.SetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT", oltpEndpoint); //Set the URL Grafana gives where telemetry data will be sent
+            Environment.SetEnvironmentVariable("OTEL_EXPORTER_OTLP_PROTOCOL", protocol); //Set the communication protocol for sending data (usually http/protobuf)
+
+
             // Add services to the container.
             builder.Services.AddAuthorization();
 
