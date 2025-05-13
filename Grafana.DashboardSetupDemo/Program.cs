@@ -2,7 +2,8 @@ using OpenTelemetry.Resources; //for defining service name, environment, and ver
 using OpenTelemetry.Trace; //for enabling tracing
 using OpenTelemetry.Metrics; //for enabling metrics
 using OpenTelemetry.Logs; //for enabling logging
-using Grafana.OpenTelemetry; //for intergrating directly with Grafana cloud
+using Grafana.OpenTelemetry;
+using Microsoft.Extensions.Http.Logging; //for intergrating directly with Grafana cloud
 
 
 
@@ -62,8 +63,16 @@ namespace Grafana.DashboardSetupDemo
                     .AddOtlpExporter(); //send trace data to OTLP endpoint in Grafana
 
                 });
+
+            //Send logs to Grafana using OpenTelemetry logging support
+            builder.Logging.AddOpenTelemetry(logging =>
+            {
+                logging
+                .UseGrafana() //Adds Grafana-specific configuration for log handling
+                .AddOtlpExporter(); //Send log data to OTLP endpoint in Grafana
+            });
                 
-                
+
 
 
             // Add services to the container.
