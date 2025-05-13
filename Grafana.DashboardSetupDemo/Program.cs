@@ -39,7 +39,31 @@ namespace Grafana.DashboardSetupDemo
             string base64Auth = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(auth)); //Convert that auth string onto Bae64- encoded string  used in HTTP Basic Authentication
             Environment.SetEnvironmentVariable("OTEL_EXPORTER_OTLP_HEADERS","Authorization=Basic "+ base64Auth);//Set the OTEL_EXPORTER_OTLP_HEADERS environment variable to include the Authorization header with the base64-encoded auth string
 
+            //Register OpenTelemetry services in dependency injection conatiner
+            builder.Services.AddOpenTelemetry()
+                .WithTracing(tracing =>
 
+                { //enable automatic tracing of incominh HTTP requests
+                    tracing
+                    .UseGrafana() //Adds Grafana-specific configuration for tracing
+                    .AddAspNetCoreInstrumentation() //Enabless ASP.NET Core instrumentation for tracing incoming HTTP requests
+                    .AddHttpClientInstrumentation() //Enables automatic tracing of outgoing HTTP requests
+                    .AddOtlpExporter(); //send trace data to OTLP endpoint
+                })
+                .WithMetrics(metrics =>
+                {
+                    //enable metics collection and export
+                    metrics
+                    .UseGrafana() //Adds Grafana-specific configuration for tracing
+                    .AddAspNetCoreInstrumentation() //Enabless ASP.NET Core instrumentation for tracing incoming HTTP requests
+                    .AddHttpClientInstrumentation() //Enables automatic tracing of outgoing HTTP requests
+                    .AddPrometheusExporter() //Makes metrics available via HTTP for Prometheus scraping
+                    .AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel") //Common built in meters
+                    .AddOtlpExporter(); //send trace data to OTLP endpoint in Grafana
+
+                });
+                
+                
 
 
             // Add services to the container.
