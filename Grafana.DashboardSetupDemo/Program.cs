@@ -34,6 +34,14 @@ namespace Grafana.DashboardSetupDemo
             Environment.SetEnvironmentVariable("OTEL_EXPORTER_OTLP_PROTOCOL", protocol); //Set the communication protocol for sending data (usually http/protobuf)
 
 
+            //Add authorization header for Grafana OTLP endpoint
+            string auth = instanceId + ":" + apiToken; //Combine instance Id and API token into a single string using the format : instanceId: apiToken
+            string base64Auth = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(auth)); //Convert that auth string onto Bae64- encoded string  used in HTTP Basic Authentication
+            Environment.SetEnvironmentVariable("OTEL_EXPORTER_OTLP_HEADERS","Authorization=Basic "+ base64Auth);//Set the OTEL_EXPORTER_OTLP_HEADERS environment variable to include the Authorization header with the base64-encoded auth string
+
+
+
+
             // Add services to the container.
             builder.Services.AddAuthorization();
 
